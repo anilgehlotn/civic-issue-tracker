@@ -6,3 +6,7 @@ A simple blockchain-based system that lets citizens raise civic issues and track
 Detailed project documentation is available here:  
 [View Full Documentation](docs/Civic_Issue_Tracker_Project_Documentation.md)
 
+
+## 📑 Feature Specification
+Detailed frontend and backend feature list is available here:  
+[Feature Specification](docs/FEATURE_SPECIFICATION.md)
