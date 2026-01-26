@@ -1,6 +1,7 @@
 // Registration flow service
 const registerSessions = new Map(); // chatId -> { step, data }
-const { generateIssueId, addGrievance } = require('./storageService');
+const { generateIssueId } = require('./storageService');
+const { classifyImage, mapCategoryToRole } = require('./aiService');
 
 const askContactNumber = (ctx, session) => {
     session.step = 'contact';
@@ -66,7 +67,7 @@ function handleText(ctx) {
     return false;
 }
 
-function handlePhoto(ctx) {
+async function handlePhoto(ctx) {
     const chatId = ctx.chat.id;
     const session = registerSessions.get(chatId);
 
@@ -79,33 +80,33 @@ function handlePhoto(ctx) {
 
     const issueId = generateIssueId();
 
-    const record = {
-        issueId,
-        chatId,
-        name: session.data.name,
-        contact: session.data.contact,
-        ward: session.data.ward,
-        photoFileId: bestPhoto.file_id,
-    };
+    try {
+        // Get a view/download URL for the photo from Telegram
+        const fileUrl = await ctx.telegram.getFileLink(bestPhoto.file_id);
 
-    // Save to MongoDB
-    addGrievance(record)
-        .then(() => {
-            registerSessions.delete(chatId);
-            ctx.reply(
-                `✅ Your grievance has been registered successfully!\n\n` +
-                `📋 Issue ID: ${issueId}\n` +
-                `Please save this ID to track your grievance status using /status command.\n\n` +
-                `Our team will review it and contact you soon. Thank you!`
-            );
-        })
-        .catch((error) => {
-            console.error('Error saving grievance:', error);
-            ctx.reply(
-                `❌ Error registering your grievance. Please try again later.\n` +
-                `Error: ${error.message}`
-            );
-        });
+        // Call AI to classify the image
+        const aiCategory = await classifyImage(fileUrl.toString());
+        const assignedRole = mapCategoryToRole(aiCategory);
+        
+        console.log(`[AI Classification] Issue ${issueId}: Category="${aiCategory}", Role="${assignedRole}"`);
+
+        registerSessions.delete(chatId);
+        ctx.reply(
+            `✅ Your grievance has been received!\n\n` +
+            `📋 Issue ID: ${issueId}\n` +
+            `📂 Category: ${aiCategory || 'Unknown'}\n` +
+            `👷 Assigned To: ${assignedRole}\n` +
+            `📍 Ward: ${session.data.ward}\n\n` +
+            `Your issue will be forwarded to the ${assignedRole} in Ward ${session.data.ward}.\n` +
+            `You will be notified once action is taken. Thank you!`
+        );
+    } catch (error) {
+        console.error('Error classifying image:', error);
+        ctx.reply(
+            `❌ Error classifying your grievance image. Please try again later.\n` +
+            `Error: ${error.message}`
+        );
+    }
 
     return true;
 }

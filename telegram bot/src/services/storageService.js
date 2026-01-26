@@ -1,12 +1,12 @@
 // Storage service - MongoDB integration for grievances
 const Grievance = require('../models/Grievance');
 
-let issueCounter = 1000;
+
 
 function generateIssueId() {
-    // For demo: increment counter. 
-    // Can be replaced with timestamp-based or custom ID generation
-    return `GRV-${issueCounter++}`;
+    const timestamp = Date.now().toString(36).toUpperCase();
+    const randomPart = Math.random().toString(36).substring(2, 6).toUpperCase();
+    return `GRV-${timestamp}-${randomPart}`;
 }
 
 async function addGrievance(record) {
@@ -18,6 +18,8 @@ async function addGrievance(record) {
             userContact: record.contact,
             wardNumber: record.ward,
             photoFileId: record.photoFileId,
+            photoFileUniqueId: record.photoFileUniqueId,
+            photoUrl: record.photoUrl,
             status: 'pending',
             createdAt: new Date(),
             updatedAt: new Date(),

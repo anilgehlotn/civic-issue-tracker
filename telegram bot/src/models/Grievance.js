@@ -30,11 +30,19 @@ const grievanceSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    photoUrl: {
+        type: String,
+        required: true,
+    },
+    photoFileUniqueId: {
+        type: String,
+    },
     
     // Issue Assignment and Tracking
     assignedTo: {
         staffId: String,
         staffName: String,
+        role: String, // e.g., 'Road Engineer', 'Water Department', 'Drainage Department'
         assignedAt: Date,
     },
     
