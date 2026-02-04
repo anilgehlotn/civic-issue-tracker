@@ -1,6 +1,5 @@
-const unused = 10;
+const unusedVariable: number = 10;
 
-export default function Home() {
-  console.log('hello')  // single quotes + console.log
-  return <h1>Hello</h1>
+export default function Page() {
+  return <h1>Hello</h1>;
 }

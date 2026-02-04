@@ -13,7 +13,7 @@ Detailed frontend and backend feature list is available here:
 
 ---
 
-## 📂 Folder Structure
+## 📂 Folder Structur
 
 src/
 ├── app/ # Routes, pages, and layouts using Next.js App Router
@@ -56,3 +56,9 @@ npm run dev
 ## 🔍 Reflection: Why This Structure?
 
 This folder structure follows Next.js best practices and keeps routing, UI components, and utilities clearly separated. It improves code readability and makes collaboration easier. As new features are added in future sprints, this structure will help the application scale while remaining clean and maintainable.
+
+
+Pre-commit hooks were configured using Husky and lint-staged. During commits, ESLint and Prettier were automatically executed on staged files to fix formatting and code quality issues before allowing the commit, ensuring consistent standards across the codebase.
+
+
+Auto-fixable lint issues were resolved during the pre-commit phase, demonstrating effective enforcement of code quality checks.
