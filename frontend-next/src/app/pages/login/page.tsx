@@ -75,25 +75,21 @@ export default function LoginPage() {
         { employeeId: 'STF101', password: 'staff123', role: 'staff', wardNumber: 'Ward 1', category: 'roads', department: 'Road Maintenance', name: 'Rajesh Kumar' },
         { employeeId: 'STF102', password: 'staff123', role: 'staff', wardNumber: 'Ward 1', category: 'waste', department: 'Waste Management', name: 'Suresh Patil' },
         { employeeId: 'STF103', password: 'staff123', role: 'staff', wardNumber: 'Ward 1', category: 'lighting', department: 'Street Lighting', name: 'Amit Singh' },
-        { employeeId: 'STF104', password: 'staff123', role: 'staff', wardNumber: 'Ward 1', category: 'water', department: 'Water Supply', name: 'Meera Das' },
 
         // Ward 2 Staff
         { employeeId: 'STF201', password: 'staff123', role: 'staff', wardNumber: 'Ward 2', category: 'roads', department: 'Road Maintenance', name: 'Priya Sharma' },
         { employeeId: 'STF202', password: 'staff123', role: 'staff', wardNumber: 'Ward 2', category: 'waste', department: 'Waste Management', name: 'Anjali Desai' },
         { employeeId: 'STF203', password: 'staff123', role: 'staff', wardNumber: 'Ward 2', category: 'lighting', department: 'Street Lighting', name: 'Rohan Gupta' },
-        { employeeId: 'STF204', password: 'staff123', role: 'staff', wardNumber: 'Ward 2', category: 'water', department: 'Water Supply', name: 'Kavita Iyer' },
 
         // Ward 3 Staff
         { employeeId: 'STF301', password: 'staff123', role: 'staff', wardNumber: 'Ward 3', category: 'roads', department: 'Road Maintenance', name: 'Vikram Malhotra' },
         { employeeId: 'STF302', password: 'staff123', role: 'staff', wardNumber: 'Ward 3', category: 'waste', department: 'Waste Management', name: 'Neha Kapoor' },
         { employeeId: 'STF303', password: 'staff123', role: 'staff', wardNumber: 'Ward 3', category: 'lighting', department: 'Street Lighting', name: 'Arjun Reddy' },
-        { employeeId: 'STF304', password: 'staff123', role: 'staff', wardNumber: 'Ward 3', category: 'water', department: 'Water Supply', name: 'Sanjay Menon' },
 
         // Ward 4 Staff (New)
         { employeeId: 'STF401', password: 'staff123', role: 'staff', wardNumber: 'Ward 4', category: 'roads', department: 'Road Maintenance', name: 'Deepak Chopra' },
         { employeeId: 'STF402', password: 'staff123', role: 'staff', wardNumber: 'Ward 4', category: 'waste', department: 'Waste Management', name: 'Sunita Rao' },
         { employeeId: 'STF403', password: 'staff123', role: 'staff', wardNumber: 'Ward 4', category: 'lighting', department: 'Street Lighting', name: 'Manoj Tiwari' },
-        { employeeId: 'STF404', password: 'staff123', role: 'staff', wardNumber: 'Ward 4', category: 'water', department: 'Water Supply', name: 'Lata Mangeshkar' }
       ];
       localStorage.setItem('users', JSON.stringify(dummyUsers));
     }
@@ -107,8 +103,8 @@ export default function LoginPage() {
         existingIssues = [];
     }
 
-    if (!existingIssues || existingIssues.length === 0) {
-      const categories = ['roads', 'waste', 'lighting', 'water'];
+    if (!existingIssues || existingIssues.length === 0 || existingIssues.some((i: Issue) => i.category === 'water')) {
+      const categories = ['roads', 'waste', 'lighting'];
       const statuses = ['pending', 'in-progress', 'resolved'];
       const wards = ['Ward 1', 'Ward 2', 'Ward 3', 'Ward 4'];
       
@@ -122,9 +118,8 @@ export default function LoginPage() {
         switch(category) {
             case 'roads': imageUrl = 'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&q=80&w=400'; break; // Pothole/Road
             case 'waste': imageUrl = 'https://images.unsplash.com/photo-1530587191325-3db32d826c18?auto=format&fit=crop&q=80&w=400'; break; // Garbage
-            case 'lighting': imageUrl = 'https://images.unsplash.com/photo-1542287098-17a47ce4dae4?auto=format&fit=crop&q=80&w=400'; break; // Streetlight
-            case 'water': imageUrl = 'https://images.unsplash.com/photo-1570535948967-df3998dc712e?auto=format&fit=crop&q=80&w=400'; break; // Water/Pipe
-            default: imageUrl = 'https://placehold.co/400x300?text=Issue';
+            case 'lighting': imageUrl = 'https://thumbs.dreamstime.com/b/road-lamp-broken-bulb-against-blue-sky-56874582.jpg'; break; // Streetlight (New URL)
+            default: imageUrl = 'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&q=80&w=400';
         }
 
         return {
@@ -141,6 +136,7 @@ export default function LoginPage() {
       });
       
       localStorage.setItem('issues', JSON.stringify(dummyIssues));
+      // Force reload if we cleared data due to 'water' category presence (handled by setItem but ui needs refresh if already loaded? actually this runs on mount, so it might need a reload if data changed significantly, but likely fine for next render or state update if we were setting state. Here we are just setting localstorage. The dashboards read from localstorage on mount. So we are good.)
     }
   }, [router]);
 

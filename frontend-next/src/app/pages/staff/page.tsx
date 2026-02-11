@@ -83,7 +83,7 @@ export default function StaffDashboard() {
             <div className="text-sm text-gray-600 mt-1 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0">
                <span className="font-medium text-gray-900">ID: {currentUser?.employeeId}</span>
                <span className="hidden sm:inline mx-2">•</span>
-               <span>{currentUser?.department || (currentUser?.category === 'waste' ? 'Waste Management' : currentUser?.category === 'lighting' ? 'Street Lighting' : currentUser?.category === 'water' ? 'Water Supply' : 'Road Maintenance')}</span>
+               <span>{currentUser?.department || (currentUser?.category === 'waste' ? 'Waste Management' : currentUser?.category === 'lighting' ? 'Street Lighting' : 'Road Maintenance')}</span>
                <span className="hidden sm:inline mx-2">•</span>
                <span>{currentUser?.wardNumber}</span>
             </div>
@@ -107,7 +107,7 @@ export default function StaffDashboard() {
                   <div>
                     <h4 className="text-xl font-semibold text-gray-800">{issue.title}</h4>
                     <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded mt-1 inline-block">
-                      {issue.category === 'waste' ? 'Waste Management' : issue.category === 'lighting' ? 'Street Lighting' : issue.category === 'water' ? 'Water Supply' : 'Road Maintenance'}
+                      {issue.category === 'waste' ? 'Waste Management' : issue.category === 'lighting' ? 'Street Lighting' : 'Road Maintenance'}
                     </span>
                   </div>
                   <span className={`px-3 py-1 rounded-full text-sm font-semibold ${issue.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : issue.status === 'in progress' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>

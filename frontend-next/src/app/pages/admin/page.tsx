@@ -323,7 +323,6 @@ export default function AdminDashboard() {
                              issue.category === 'waste' ? 'bg-green-500' : 
                              issue.category === 'lighting' ? 'bg-yellow-500' : 
                              issue.category === 'roads' ? 'bg-gray-700' :
-                             issue.category === 'water' ? 'bg-blue-500' :
                              'bg-gray-500'
                          }`}></span>
                          {issue.category}
