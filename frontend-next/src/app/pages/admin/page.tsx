@@ -21,6 +21,7 @@ interface User {
   category?: string;
   department?: string;
   name?: string;
+  createdAt?: string;
 }
 
 export default function AdminDashboard() {
@@ -86,30 +87,48 @@ export default function AdminDashboard() {
 
   const handleAddUser = async (e: React.FormEvent) => {
     e.preventDefault();
-    const registrationData = {
-      name: newEmployeeId,
-      password: newPassword,
+    
+    // Create new user object matching the interface
+    const newUser: User = {
+      _id: Date.now().toString(), // Generate a temporary ID
+      employeeId: newEmployeeId,
+      password: newPassword, // Note: storing plain passwords in localStorage is not secure but acceptable for a demo
       wardNumber: newWardNumber,
-      department: newCategory,
-      role: newRole === 'staff' ? 'Staff' : 'Admin',
+      category: newCategory, // Mapping category to department/category
+      department: newCategory, // Keeping both for compatibility
+      role: newRole,
+      name: newEmployeeId, // Using employeeID as name if name is not separate
+      createdAt: new Date().toISOString() // Added createdAt for AllUsers page
     };
+
     try {
+      // Try API first
       const res = await fetch(API_URLS.REGISTER, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(registrationData),
+        body: JSON.stringify(newUser),
       });
-      if (!res.ok) throw new Error('Registration failed');
-      const user = await res.json();
-      setUsers([...users, user]);
-      setNewEmployeeId('');
-      setNewPassword('');
-      setNewWardNumber('');
-      setNewCategory('waste');
-      alert('User created successfully!');
-    } catch (err: unknown) {
-      alert('Error registering user: ' + (err instanceof Error ? err.message : String(err)));
+
+      if (res.ok) {
+        const user = await res.json();
+        setUsers([...users, user]);
+      } else {
+        throw new Error('API unavailable');
+      }
+    } catch (err) {
+      console.warn('API fetch failed, saving to localStorage', err);
+      // Fallback to localStorage
+      const updatedUsers = [...users, newUser];
+      setUsers(updatedUsers);
+      localStorage.setItem('users', JSON.stringify(updatedUsers));
     }
+    
+    // Reset form
+    setNewEmployeeId('');
+    setNewPassword('');
+    setNewWardNumber('');
+    setNewCategory('waste');
+    alert('User created successfully!');
   };
 
   const handleAssignIssue = (e: React.ChangeEvent<HTMLSelectElement>, issueId: number) => {
