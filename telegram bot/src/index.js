@@ -1,4 +1,4 @@
-require('dotenv').config({path: "../.env"});
+require('dotenv').config();
 const { Telegraf } = require('telegraf');
 const { connectDB } = require('./config/db');
 const {
