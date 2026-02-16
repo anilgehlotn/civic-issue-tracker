@@ -40,6 +40,12 @@ This is a Telegram bot for the Civic Issue Tracker system that allows citizens t
 
 ### Running the Bot
 
+Start the bot:
+```bash
+npm start
+```
+
+Alternatively, you can run it directly:
 ```bash
 node src/index.js
 ```
